@@ -1,0 +1,11 @@
+[Unit]
+Description=vsftpd
+After=network.target
+
+[Service]
+User=root
+ExecStart=/usr/local/sbin/vsftpd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

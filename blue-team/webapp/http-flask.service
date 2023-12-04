@@ -1,0 +1,12 @@
+[Unit]
+Description=flask-web-app
+After=network.target
+
+[Service]
+User=root
+ExecStart=/usr/bin/python3 /root/hardening/webapp/app.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

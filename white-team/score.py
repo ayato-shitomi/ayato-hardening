@@ -10,7 +10,13 @@ score = [False, 0, 0, 0, 0, 0, 0, 0, 0]
 
 @app.route("/add")
 def add():
-
+	global score
+	get_team = request.args.get('team')
+	get_score = request.args.get('score')
+	print(get_team, get_score)
+	if get_team is not None and get_score is not None:
+		score[int(get_team)] += int(get_score)
+	return score
 
 @app.route("/")
 def index():
@@ -18,9 +24,9 @@ def index():
 	<html>
 	<body>
 		<header>
-			<h1>Hardening</h1>
+			<meta http-equiv="refresh" content="5; URL=./">
+			<link rel="stylesheet" href="./static/css/style.css">
 		</header>
-
 		<h1>Scorebored</h1>
 		<table>
 			<tr><th>Team</th><th>Score</th></tr>
