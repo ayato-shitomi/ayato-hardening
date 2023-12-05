@@ -1,0 +1,1 @@
+sshpass -p 'hardening' ssh -o StrictHostKeyChecking=no $1 -l hardening "echo hardening | sudo -S systemctl restart ftpd.service && systemctl status ftpd.service"
