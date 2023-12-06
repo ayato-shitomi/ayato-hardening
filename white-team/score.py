@@ -27,7 +27,7 @@ def index():
 			<meta http-equiv="refresh" content="5; URL=./">
 			<link rel="stylesheet" href="./static/css/style.css">
 		</header>
-		<h1>Scorebored</h1>
+		<h1>Scoreboard</h1>
 		<table>
 			<tr><th>Team</th><th>Score</th></tr>
 			<tr><td>Team 1</td><td>{}</td></tr>

@@ -1,3 +1,4 @@
+sudo systemctl stop http-flask.service
 sudo apt-get install build-essential
 sudo useradd nobody
 sudo mkdir /usr/share/empty
@@ -13,4 +14,5 @@ sudo chmod og-w /var/ftp
 sudo cp ./ftpd.service /etc/systemd/system/
 sudo systemctl enable ftpd.service
 sudo systemctl start ftpd.service
+sudo systemctl restart ftpd.service
 sudo systemctl status ftpd.service
