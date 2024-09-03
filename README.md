@@ -3,9 +3,38 @@
 
 40分のハードニングイベントを作ってみた
 
-# ルール
+# 起動
 
-- 
+```bash
+# やられサーバーの起動
+docker-compose up -d
+
+# スコアボードの起動
+python3 ./white-team/score.py
+
+# スコアBOTの起動
+python3 ./red-team/check.py
+# 攻撃BOTの起動
+python3 ./red-team/main.py
+```
+
+# テクニック
+
+```bash
+# WEBアプリケーションの起動
+python3 /var/www/html/webapp/app.py &>/dev/null &
+```
+
+## 堅牢MAX
+
+```bash
+for i in {1..11}; do userdel -r user$i; done
+userdel dev && userdel ubuntu && echo "root:toor" | chpasswd
+pkill -f "/usr/local/sbin/vsftpd /etc/vsftpd.conf"
+rm -rf /var/www/html/webapp/README.md && rm -rf /var/www/html/webapp/webapp/README.md && rm -rf /var/www/html/README.md
+sed -i 's/<h1>Welcome {}, your browser infomation<\/h1>/<h1>Welcome, your browser infomation<\/h1>/' /var/www/html/webapp/app.py
+pkill -f "python3 /var/www/html/webapp/app.py" && python3 /var/www/html/webapp/app.py &>/dev/null &
+```
 
 # シナリオ
 
@@ -50,7 +79,7 @@
 侵入された場合
 
 - `sg`ユーザーが作成される
-- `systemctl stop http-flask.service`でWEBサーバーが停止する
+- WEBサーバーが停止する
 
 ## vsftpdの脆弱性を利用した攻撃
 
@@ -60,37 +89,29 @@ vsftpdの脆弱性を利用した攻撃を行う
 
 侵入された場合
 
-- `sudo useradd test`により`test`ユーザーが作られる
+- `useradd test`により`test`ユーザーが作られる
 
 ## クレデンシャル情報の流出
 
 WEBサーバーよりクレデンシャル情報が流出する
 
-- `:8080/README.md`にリクエストが来る
+- `:1x081/README.md`にリクエストが来る
 - クレデンシャル情報が流出する
-
-侵入された場合
-
-- `dev`ユーザーが侵害される（`dev`/`devpass123`）
-- 不正なファイルが`/var/www/html/hacked`作成される
 
 ## WEBアプリへの攻撃
 
 SSTIでWEBアプリへの攻撃を行う
 
 - WEBサーバーに攻撃が来る
-- SSTIでUFWのルールが追加される
+- サーバーが停止する
+
+1回目のリクエスト
 
 ```
-{{request.application.__globals__.__builtins__.__import__('os').popen('whoami').read()}}
-```
+/app?name={{request.application.__globals__.__builtins__.__import__("os").popen("whoami").read()}}```
 
 ```
-{{request.application.__globals__.__builtins__.__import__(%27os%27).popen(%27systemctl%20stop%20http-flask.service%27).read()}}
+/app?name={{request.application.__globals__.__builtins__.__import__("os").popen("pkill -f 'python3 /var/www/html/webapp/app.py'").read()}}
 ```
 
-# todo 
-
-- すべてのシステムでuser.shを実行する
-- vsftpdの脆弱性を発生させる
 
