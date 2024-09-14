@@ -18,6 +18,17 @@ python3 ./red-team/check.py
 python3 ./red-team/main.py
 ```
 
+## ポートの解放
+
+```
+# IPアドレス1 (192.168.1.100) から許可
+sudo ufw allow proto tcp from 192.168.1.100 to any port 11021:18021
+sudo ufw allow proto tcp from 192.168.1.100 to any port 11022:18022
+sudo ufw allow proto tcp from 192.168.1.100 to any port 11080:18080
+sudo ufw allow proto tcp from 192.168.1.100 to any port 11081:18081
+sudo ufw allow proto tcp from 192.168.1.100 to any port 11062:18062
+```
+
 # テクニック
 
 ```bash
