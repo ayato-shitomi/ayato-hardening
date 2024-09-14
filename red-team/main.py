@@ -152,29 +152,25 @@ def web_attack(team_id):
 
 if __name__ == "__main__":
 	#ブルートフォース攻撃のテスト
-	#sleep_until(60 * 10 /2)
-	sleep_until(20)
+	sleep_until(60 * 10)
 	print("====================================")
 	for i in range(1, 9):
 		threading.Thread(target=brute_force, args=(i,)).start()
 	
 	# vsftpdの脆弱性を利用した攻撃
-	#sleep_until(60 * 10 /2)
-	sleep_until(20)
+	sleep_until(60 * 10)
 	print("====================================")
 	for i in range(1, 9):
 		threading.Thread(target=run, args=(i, target)).start()
 	
 	# クレデンシャル情報の流出
-	#sleep_until(60 * 5 /2)
-	sleep_until(20)
+	sleep_until(60 * 5)
 	print("====================================")
 	for i in range(1, 9):
 		threading.Thread(target=cred_attack, args=(i,)).start()
 
 	# WEBアプリへの攻撃
-	#sleep_until(60 * 5 /2)
-	sleep_until(20)
+	sleep_until(60 * 5)
 	print("====================================")
 	for i in range(1, 9):
 		threading.Thread(target=web_attack, args=(i,)).start()
